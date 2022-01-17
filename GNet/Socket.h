@@ -16,8 +16,17 @@ namespace GNet
 		GResult Create();
 		GResult Close();
 
+		GResult Bind(IPEndpoint endpoint);
+		GResult Listen(IPEndpoint endpoint, int backlog = 5);
+		GResult Accept(Socket& outSocket);
+		GResult Connect(IPEndpoint endpoint);
+
+		GResult Send(void* data, int numberOfBytes, int& bytesSent);
+		GResult Recv(void* destination, int numberOfBytes, int& bytesReceived);
+
 		SocketHandle GetHandle();
 		IPVersion GetIPVersion();
+
 	private:
 		IPVersion m_ipversion = IPVersion::IPv4;
 		SocketHandle m_handle = INVALID_SOCKET;

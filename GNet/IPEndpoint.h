@@ -2,6 +2,7 @@
 #include "IPVersion.h"
 #include <string>
 #include <vector>
+#include <WS2tcpip.h>
 
 namespace GNet
 {
@@ -9,6 +10,7 @@ namespace GNet
 	{
 	public:
 		IPEndpoint(const char* ip, unsigned short port);
+		IPEndpoint(sockaddr* addr);
 
 		IPVersion GetIPVersion();
 		std::string GetHostname();
@@ -16,6 +18,8 @@ namespace GNet
 		std::vector<uint8_t> GetIPBytes();
 
 		unsigned short GetPort();
+		sockaddr_in GetSockaddrIPv4();
+		void Print();
 
 	private:
 		IPVersion ipversion = IPVersion::Unknown;
