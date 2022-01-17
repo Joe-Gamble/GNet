@@ -10,6 +10,7 @@ int main()
 	if (Network::Initialize())
 	{
 		std::cout << "Winsock api successfully initialized." << std::endl;
+
 		Socket socket;
 		if (socket.Create() == GResult::G_SUCCESS)
 		{
