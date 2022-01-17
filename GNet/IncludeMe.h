@@ -1,6 +1,8 @@
 #pragma once
 
-namespace GNet
-{
-	int ReturnFive();
-}
+#include "Network.h"
+#include "Socket.h"
+
+
+
+
