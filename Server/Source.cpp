@@ -25,21 +25,21 @@ int main()
 				{
 					std::cout << "New connection accepted." << std::endl;
 
-					char buffer[256];
-					int bytesReceived = 0;
+					uint32_t a(0), b(0), c(0);
+					Packet packet;
 
-					GResult result = GResult::G_SUCCESS;
-
-					while (result == GResult::G_SUCCESS)
+					while (true)
 					{
-						result = new_connection.Recv(buffer, 256, bytesReceived);
+						GResult result = new_connection.Recv(packet);
 
 						if (result != GResult::G_SUCCESS)
 						{
-							std::cout << "Client Disconnected." << std::endl;
+							std::cerr << "Could not receive packet" << std::endl;
 							break;
 						}
-						std::cout << buffer << std::endl;
+
+						packet >> a >> b >> c;
+						std::cout << a << "," << b << "," << c << std::endl;
 					}
 					new_connection.Close();
 				}

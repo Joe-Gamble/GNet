@@ -21,25 +21,31 @@ int main()
 			if (socket.Connect(IPEndpoint("127.0.0.1", 4790)) == GResult::G_SUCCESS)
 			{
 				std::cout << "Successfully connected to Server!" << std::endl;
-				char buffer[256];
-				strcpy_s(buffer, "Hello world from client! \0");
+				
+				std::string buffer = "";
+				
+				uint32_t a, b, c;
+				a = 4;
+				b = 6;
+				c = 12;
 
-				int bytesSent = 0;
+				std::string test = "Hello this is a test string!";
 
-				GResult result = GResult::G_SUCCESS;
-				while (result == GResult::G_SUCCESS)
+				Packet packet;
+				packet << a << b << c;
+
+				while (true)
 				{
-					result = socket.Send(buffer, 256, bytesSent);
-					if (result == GResult::G_SUCCESS)
+					GResult result = socket.Send(packet);
+
+					if (result != GResult::G_SUCCESS)
 					{
-						std::cout << "Attempting to send chunk of data..." << std::endl;
-						Sleep(500);
-					}
-					else
-					{
-						std::cout << "Lost Connection to the Server!" << std::endl;
+						std::cerr << "Could not send packet" << std::endl;
 						break;
 					}
+					
+					std::cout << "Attempting to send chunk of data" << std::endl;
+					Sleep(500);
 				}
 			}
 			else

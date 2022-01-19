@@ -143,11 +143,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="IncludeMe.h" />
     <ClInclude Include="IPEndpoint.h" />
     <ClInclude Include="IPVersion.h" />
     <ClInclude Include="Network.h" />
-    <ClInclude Include="PResult.h" />
+    <ClInclude Include="GResult.h" />
+    <ClInclude Include="Packet.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="SocketHandler.h" />
     <ClInclude Include="SocketOption.h" />
@@ -155,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="IPEndpoint.cpp" />
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Socket.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

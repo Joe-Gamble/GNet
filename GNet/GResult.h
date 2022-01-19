@@ -5,6 +5,6 @@ namespace GNet
 	enum class GResult
 	{
 		G_SUCCESS,
-		G_NOTYETIMPLEMENTED
+		G_GENERICERROR
 	};
 }
