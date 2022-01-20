@@ -5,19 +5,52 @@
 
 using namespace GNet;
 
+bool ProcessPacket(Packet& packet)
+{
+	std::string chatmessage;
+	uint32_t arraysize = 0;
+
+	switch (packet.GetPacketType())
+	{
+	case PacketType::PT_CHATMESSAGE:
+
+		packet >> chatmessage;
+		std::cout << "Chat Message: " << chatmessage << std::endl;
+		break;
+
+	case PacketType::PT_INTEGERARRAY:
+
+		packet >> arraysize;
+		std::cout << "Arraysize: " << arraysize << std::endl;
+
+		for (uint32_t i = 0; i < arraysize; i++)
+		{
+			uint32_t digit;
+			packet >> digit;
+			std::cout << "Value [" << i << "] : " << digit << std::endl;
+		}
+		break;
+
+	default:
+		return false;
+
+	}
+	return true;
+}
+
 int main()
 {
 	if (Network::Initialize())
 	{
 		std::cout << "Winsock api successfully initialized." << std::endl;
 
-		Socket socket;
+		Socket socket(IPVersion::IPv6);
 		if (socket.Create() == GResult::G_SUCCESS)
 		{
 			std::cout << "Socket successfully created." << std::endl;
 
 			int port = 4790;
-			if (socket.Listen(IPEndpoint("0.0.0.0", port)) == GResult::G_SUCCESS)
+			if (socket.Listen(IPEndpoint("::1", port)) == GResult::G_SUCCESS)
 			{
 				std::cout << "Socket successfully listening on port "<< port << "." << std::endl;
 				Socket new_connection;
@@ -25,7 +58,6 @@ int main()
 				{
 					std::cout << "New connection accepted." << std::endl;
 
-					uint32_t a(0), b(0), c(0);
 					Packet packet;
 
 					while (true)
@@ -38,8 +70,8 @@ int main()
 							break;
 						}
 
-						packet >> a >> b >> c;
-						std::cout << a << "," << b << "," << c << std::endl;
+						if (!ProcessPacket(packet))
+							break;
 					}
 					new_connection.Close();
 				}

@@ -150,6 +150,7 @@
     <ClInclude Include="Network.h" />
     <ClInclude Include="GResult.h" />
     <ClInclude Include="Packet.h" />
+    <ClInclude Include="PacketType.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="SocketHandler.h" />
     <ClInclude Include="SocketOption.h" />
@@ -159,6 +160,9 @@
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Socket.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PacketException.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,12 +4,19 @@
 #include <vector>
 #include <WinSock2.h>
 #include <string>
+#include "PacketException.h"
+#include "PacketType.h"
 
 namespace GNet
 {
 	class Packet
 	{
 	public:
+
+		Packet(PacketType packetType = PacketType::PT_INVALID);
+		PacketType GetPacketType();
+		void SetPacketType(PacketType packetType);
+
 		void Clear();
 		void Append(const void* data, uint32_t size);	
 
@@ -19,7 +26,12 @@ namespace GNet
 		Packet& operator << (const std::string &data); //insertion
 		Packet& operator >> (std::string &data); //extraction
 
-		uint32_t extractionOffset = 0; //used to "jump over" data that has already been extracted
+		//std::vector<char>* GetBuffer() { return &buffer; }
+
 		std::vector<char> buffer;
+
+	private:
+
+		uint32_t extractionOffset = 0; //used to "jump over" data that has already been extracted
 	};
 }

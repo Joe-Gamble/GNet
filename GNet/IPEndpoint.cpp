@@ -8,8 +8,10 @@ GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 {
 	this->port = port;
 
-	in_addr addr; //location to store ipv4 address
+#pragma region IPV4
+	//IPv4
 
+	in_addr addr; //location to store ipv4 address
 	int result = inet_pton(AF_INET, ip, &addr);
 
 	if (result == 1) //ip was valid and was parsed successfully
@@ -38,13 +40,13 @@ GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 	{
 		sockaddr_in* host_addr = reinterpret_cast<sockaddr_in*>(info->ai_addr);
 
-		ip_string.resize(16);
+		ip_string.resize(sizeof(ULONG));
 		inet_ntop(AF_INET, &host_addr->sin_addr, &ip_string[0], 16);
 
 		hostname = ip;
 
 		ULONG ip_long = host_addr->sin_addr.S_un.S_addr;
-		ip_bytes.resize(sizeof(ULONG));
+		ip_bytes.resize(16);
 
 		memcpy(&ip_bytes[0], &ip_long, sizeof(ULONG));
 
@@ -53,24 +55,94 @@ GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 		freeaddrinfo(info);
 		return;
 	}
+#pragma endregion
+
+#pragma region IPV6
+	
+	//IPv6
+
+	in6_addr addr6; //location to store ipv4 address
+	result = inet_pton(AF_INET6, ip, &addr6);
+
+	if (result == 1) //ip was valid and was parsed successfully
+	{
+		ip_string = ip;
+		hostname = ip;
+
+		ip_bytes.resize(16);
+		memcpy(&ip_bytes[0], &addr6.u, 16);
+
+		ipversion = IPVersion::IPv6;
+		return;
+	}
+
+	//Resolve hostname to IPv6 address
+	addrinfo hintsv6 = {};
+	hints.ai_family = AF_INET6; //ipv6 addresses only
+
+	addrinfo* infov6 = nullptr;
+
+	result = getaddrinfo(ip, NULL, &hintsv6, &infov6);
+
+	if (result == 0)
+	{
+		sockaddr_in6* host_addr = reinterpret_cast<sockaddr_in6*>(infov6->ai_addr);
+
+		ip_string.resize(46);
+		inet_ntop(AF_INET6, &host_addr->sin6_addr, &ip_string[0], 46);
+
+		hostname = ip;
+
+		ip_bytes.resize(16);
+
+		memcpy(&ip_bytes[0], &host_addr->sin6_addr, 16);
+
+		ipversion = IPVersion::IPv6;
+
+		freeaddrinfo(info);
+		return;
+	}
+#pragma endregion
+
 }
 
 GNet::IPEndpoint::IPEndpoint(sockaddr* addr)
 {
-	assert(addr->sa_family == AF_INET);
-	sockaddr_in* addrv4 = reinterpret_cast<sockaddr_in*>(addr);
+	assert(addr->sa_family == AF_INET || addr->sa_family == AF_INET6);
 
-	ipversion = IPVersion::IPv4;
+	if (addr->sa_family == AF_INET) //IPv4
+	{
+		sockaddr_in* addrv4 = reinterpret_cast<sockaddr_in*>(addr);
 
-	port = ntohs(addrv4->sin_port);
+		ipversion = IPVersion::IPv4;
 
-	ip_bytes.resize(sizeof(ULONG));
-	memcpy(&ip_bytes[0], &addrv4->sin_addr, sizeof(ULONG));
+		port = ntohs(addrv4->sin_port);
 
-	ip_string.resize(16);
-	inet_ntop(AF_INET, &addrv4->sin_addr, &ip_string[0], 16);
+		ip_bytes.resize(sizeof(ULONG));
+		memcpy(&ip_bytes[0], &addrv4->sin_addr, sizeof(ULONG));
 
-	hostname = ip_string;
+		ip_string.resize(16);
+		inet_ntop(AF_INET, &addrv4->sin_addr, &ip_string[0], 16);
+
+		hostname = ip_string;
+	}
+	else
+	{
+		sockaddr_in6* addrv6 = reinterpret_cast<sockaddr_in6*>(addr);
+
+		ipversion = IPVersion::IPv6;
+
+		port = ntohs(addrv6->sin6_port);
+
+		ip_bytes.resize(16);
+		memcpy(&ip_bytes[0], &addrv6->sin6_addr, 16);
+
+		ip_string.resize(46);
+		inet_ntop(AF_INET6, &addrv6->sin6_addr, &ip_string[0], 46);
+
+		hostname = ip_string;
+	}
+	
 }
 
 IPVersion GNet::IPEndpoint::GetIPVersion()
@@ -109,6 +181,19 @@ sockaddr_in GNet::IPEndpoint::GetSockaddrIPv4()
 	addr.sin_port = htons(port); //convert to network byte order
 
 	return addr;
+}
+
+sockaddr_in6 GNet::IPEndpoint::GetSockaddrIPv6()
+{
+	assert(ipversion == IPVersion::IPv6);
+
+	sockaddr_in6 addr6 = {};
+	addr6.sin6_family = AF_INET6;
+
+	memcpy(&addr6.sin6_addr, &ip_bytes[0], 16); //copy ip bytes over
+	addr6.sin6_port = htons(port); //convert to network byte order
+
+	return addr6;
 }
 
 void GNet::IPEndpoint::Print()
