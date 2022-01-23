@@ -20,7 +20,7 @@ namespace GNet
 
 		GResult Bind(IPEndpoint endpoint);
 		GResult Listen(IPEndpoint endpoint, int backlog = 5);
-		GResult Accept(Socket& outSocket);
+		GResult Accept(Socket& outSocket, IPEndpoint* endpoint = nullptr);
 		GResult Connect(IPEndpoint endpoint);
 
 		GResult Send(const void* data, int numberOfBytes, int& bytesSent);
@@ -33,6 +33,7 @@ namespace GNet
 
 		SocketHandle GetHandle();
 		IPVersion GetIPVersion();
+		GResult SetBlocking(bool isBlocking);
 
 	private:
 		IPVersion m_ipversion = IPVersion::IPv4;

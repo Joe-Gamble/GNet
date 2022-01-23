@@ -1,6 +1,7 @@
 #include "IPEndpoint.h"
 #include <assert.h>
 #include <iostream>
+#include "Helpers.h"
 
 using namespace GNet;
 
@@ -20,6 +21,9 @@ GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 		{
 			ip_string = ip;
 			hostname = ip;
+
+			Helpers::trim(ip_string);
+			Helpers::trim(hostname);
 
 			ip_bytes.resize(sizeof(ULONG));
 			memcpy(&ip_bytes[0], &addr.S_un.S_addr, sizeof(ULONG));
@@ -45,6 +49,9 @@ GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 
 		hostname = ip;
 
+		Helpers::trim(ip_string);
+		Helpers::trim(hostname);
+
 		ULONG ip_long = host_addr->sin_addr.S_un.S_addr;
 		ip_bytes.resize(16);
 
@@ -69,6 +76,9 @@ GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 		ip_string = ip;
 		hostname = ip;
 
+		Helpers::trim(ip_string);
+		Helpers::trim(hostname);
+
 		ip_bytes.resize(16);
 		memcpy(&ip_bytes[0], &addr6.u, 16);
 
@@ -92,6 +102,9 @@ GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 		inet_ntop(AF_INET6, &host_addr->sin6_addr, &ip_string[0], 46);
 
 		hostname = ip;
+
+		Helpers::trim(ip_string);
+		Helpers::trim(hostname);
 
 		ip_bytes.resize(16);
 
@@ -142,7 +155,9 @@ GNet::IPEndpoint::IPEndpoint(sockaddr* addr)
 
 		hostname = ip_string;
 	}
-	
+
+	Helpers::trim(ip_string);
+	Helpers::trim(hostname);
 }
 
 IPVersion GNet::IPEndpoint::GetIPVersion()

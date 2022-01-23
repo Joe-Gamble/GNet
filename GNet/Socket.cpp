@@ -28,6 +28,11 @@ namespace GNet
 			return GResult::G_GENERICERROR;
 		}
 
+		if (SetBlocking(false) != GResult::G_SUCCESS)
+		{
+			return GResult::G_SUCCESS;
+		}
+
 		if (SetSocketOption(SocketOption::TCP_NO_DELAY, TRUE) != GResult::G_SUCCESS)
 		{
 			return GResult::G_GENERICERROR;
@@ -110,7 +115,7 @@ namespace GNet
 		return GResult::G_SUCCESS;
 	}
 
-	GResult Socket::Accept(Socket& outSocket)
+	GResult Socket::Accept(Socket& outSocket, IPEndpoint* endpoint)
 	{
 		assert(m_ipversion == IPVersion::IPv4 || m_ipversion == IPVersion::IPv6);
 
@@ -127,10 +132,10 @@ namespace GNet
 				return GResult::G_GENERICERROR;
 			}
 
-			IPEndpoint newConnectionEndPoint((sockaddr*)&addr);
-			std::cout << "New IPv4 connection accepted!" << std::endl;
-
-			newConnectionEndPoint.Print();
+			if (endpoint != nullptr)
+			{
+				*endpoint = IPEndpoint((sockaddr*)&addr);
+			}
 
 			outSocket = Socket(IPVersion::IPv4, acceptedConnectionHandle);
 		}
@@ -147,10 +152,10 @@ namespace GNet
 				return GResult::G_GENERICERROR;
 			}
 
-			IPEndpoint newConnectionEndPoint((sockaddr*)&addr6);
-			std::cout << "New IPv6 connection accepted!" << std::endl;
-
-			newConnectionEndPoint.Print();
+			if (endpoint != nullptr)
+			{
+				*endpoint = IPEndpoint((sockaddr*)&addr6);
+			}
 
 			outSocket = Socket(IPVersion::IPv6, acceptedConnectionHandle);
 		}
@@ -326,6 +331,21 @@ namespace GNet
 		}
 
 		if (result != 0)
+		{
+			int error = WSAGetLastError();
+			return GResult::G_GENERICERROR;
+		}
+		return GResult::G_SUCCESS;
+	}
+
+	GResult Socket::SetBlocking(bool isBlocking)
+	{
+		unsigned long nonBlocking = 1;
+		unsigned long blocking = 0;
+		
+		int result = ioctlsocket(m_handle, FIONBIO, isBlocking ? &blocking : &nonBlocking);
+
+		if (result == SOCKET_ERROR)
 		{
 			int error = WSAGetLastError();
 			return GResult::G_GENERICERROR;
