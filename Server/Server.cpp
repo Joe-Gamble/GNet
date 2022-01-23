@@ -46,7 +46,7 @@ bool Server::Initialise(IPEndpoint ip)
 
 void Server::Frame()
 {
-	std::vector<WSAPOLLFD> copy_fd = master_fd; //Copy fd's so we dont corrupt orginal data
+	copy_fd = master_fd;
 
 	if (WSAPoll(copy_fd.data(), copy_fd.size(), 1) > 0)
 	{
@@ -79,44 +79,26 @@ void Server::Frame()
 		}
 #pragma endregion Listening socket code
 
-		for (int i = 1; i < copy_fd.size(); i++)
+		for (int i = copy_fd.size() - 1; i >= 1; i--)
 		{
 			int connectionIndex = i - 1;
 			TCPConnection connection = connections[connectionIndex];
 
 			if (copy_fd[i].revents & POLLERR) //if error occured on this socket
 			{
-				std::cerr << "Poll error ocurred on connection > " << connection.ToString() << std::endl;
-
-				master_fd.erase(master_fd.begin() + i);
-				copy_fd.erase(copy_fd.begin() + i);
-				connection.Close();
-				connections.erase(connections.begin() + connectionIndex);
-				i -= 1;
+				CloseConnection(connectionIndex, "Socket Error");
 				continue;
 			}
 
 			if (copy_fd[i].revents & POLLHUP) //if poll hangup occured on this socket
 			{
-				std::cerr << "Poll hangup ocurred on connection > " << connection.ToString() << std::endl;
-
-				master_fd.erase(master_fd.begin() + i);
-				copy_fd.erase(copy_fd.begin() + i);
-				connection.Close();
-				connections.erase(connections.begin() + connectionIndex);
-				i -= 1;
+				CloseConnection(connectionIndex, "Poll Hangup");
 				continue;
 			}
 
 			if (copy_fd[i].revents & POLLNVAL) //if invalid socket
 			{
-				std::cerr << "Poll hangup ocurred on connection > " << connection.ToString() << std::endl;
-
-				master_fd.erase(master_fd.begin() + i);
-				copy_fd.erase(copy_fd.begin() + i);
-				connection.Close();
-				connections.erase(connections.begin() + connectionIndex);
-				i -= 1;
+				CloseConnection(connectionIndex, "Invalid Socket");
 				continue;
 			}
 
@@ -129,13 +111,7 @@ void Server::Frame()
 
 				if (bytesRecieved == 0)
 				{
-					std::cerr << "[Recv==0] Connection lost on > " << connection.ToString() << std::endl;
-
-					master_fd.erase(master_fd.begin() + i);
-					copy_fd.erase(copy_fd.begin() + i);	
-					connection.Close();
-					connections.erase(connections.begin() + connectionIndex);
-					i -= 1;
+					CloseConnection(connectionIndex, "Recv==0");
 					continue;
 				}
 
@@ -144,13 +120,7 @@ void Server::Frame()
 					int error = WSAGetLastError();
 					if (error != WSAEWOULDBLOCK)
 					{
-						std::cerr << "[Recv<0] Connection lost on > " << connection.ToString() << std::endl;
-
-						master_fd.erase(master_fd.begin() + i);
-						copy_fd.erase(copy_fd.begin() + i);
-						connection.Close();
-						connections.erase(connections.begin() + connectionIndex);
-						i -= 1;
+						CloseConnection(connectionIndex, "Recv<0");
 						continue;
 					}
 				}
@@ -162,4 +132,16 @@ void Server::Frame()
 			}
 		}
 	}
-}	
+}
+
+void Server::CloseConnection(int connectionIndex, std::string reason)
+{
+	TCPConnection& connection = connections[connectionIndex];
+	std::cerr << "[ " << reason << " ] " << "Connection Lost > " << connection.ToString() << std::endl;
+
+	master_fd.erase(master_fd.begin() + ( connectionIndex + 1));
+	copy_fd.erase(copy_fd.begin() + ( connectionIndex + 1));
+
+	connection.Close();
+	connections.erase(connections.begin() + connectionIndex);
+}
