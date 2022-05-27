@@ -9,4 +9,10 @@ namespace GNet
 		PT_CHATMESSAGE,
 		PT_INTEGERARRAY 
 	};
+
+	inline std::ostream& operator << (std::ostream& os, const PacketType& obj)
+	{
+		os << static_cast<std::underlying_type<PacketType>::type>(obj);
+		return os;
+	}
 }

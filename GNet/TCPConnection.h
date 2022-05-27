@@ -1,5 +1,6 @@
 #pragma once
 #include "Socket.h"
+#include "PacketManager.h"
 
 namespace GNet
 {
@@ -11,6 +12,10 @@ namespace GNet
 		void Close();
 		std::string ToString();
 		Socket socket;
+		char buffer[GNet::g_MaxPacketSize];
+
+		PacketManager pm_incoming;
+		PacketManager pm_outgoing;
 	private:
 		IPEndpoint endpoint;
 		std::string stringRepresentation = "";

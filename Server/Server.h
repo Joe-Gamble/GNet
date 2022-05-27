@@ -10,6 +10,7 @@ public:
 	void Frame();
 private:
 	void CloseConnection(int connectionIndex, std::string reason);
+	bool ProcessPacket(std::shared_ptr<Packet> packet);
 	Socket listeningSocket;
 
 	//List of active connections 
