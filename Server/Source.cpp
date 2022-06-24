@@ -1,9 +1,7 @@
 //Server Code
 
-#include "Server.h"
+#include "MyServer.h"
 #include <iostream>
-
-using namespace GNet;
 
 /*
 bool ProcessPacket(Packet& packet)
@@ -43,12 +41,15 @@ bool ProcessPacket(Packet& packet)
 
 int main()
 {
-	Server server;
-	if (server.Initialise(IPEndpoint("::", 6112)))
+	if (Network::Initialize())
 	{
-		while (true)
+		MyServer server;
+		if (server.Initialise(IPEndpoint(/*"192.168.0.203"*/ "::", 6112)))
 		{
-			server.Frame();
+			while (true)
+			{
+				server.Frame();
+			}
 		}
 	}
 

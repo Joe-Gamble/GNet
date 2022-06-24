@@ -1,4 +1,5 @@
 #pragma once
 
 #include "Network.h"
-#include "TCPConnection.h"
+#include "Server.h"
+#include "Client.h"

@@ -1,21 +1,28 @@
 //Client Code
 
-#include "Client.h"
+#include "MyClient.h"
 #include <iostream>
-
-using namespace GNet;
 
 int main()
 {
-	Client client;
-	 
-	if (client.Connect(IPEndpoint("::1", 6112)))
+	if (Network::Initialize())
 	{
-		while (client.IsConnected())
+		MyClient client;
+
+		/*
+		std::string connectionString;
+		std::cin >> connectionString;
+		*/
+
+		if (client.Connect(IPEndpoint( /*connectionString.c_str()*/ "::1", 6112)))
 		{
-			client.Frame();
+			while (client.IsConnected())
+			{
+				client.Frame();
+			}
 		}
 	}
+	
 	Network::Shutdown();
 	system("Pause");
 	return 0;
