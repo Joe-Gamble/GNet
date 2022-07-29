@@ -10,12 +10,14 @@ namespace GNet
 	{
 	public:
 		IPEndpoint() {}
+		IPEndpoint(unsigned short port);
 		IPEndpoint(const char* ip, unsigned short port);
 		IPEndpoint(sockaddr* addr);
 
 		IPVersion GetIPVersion();
 		std::string GetHostname();
 		std::string GetIPString();
+		void GetWebsite(std::string url, std::string& websiteHTML, char* buffer);
 		std::vector<uint8_t> GetIPBytes();
 
 		unsigned short GetPort();

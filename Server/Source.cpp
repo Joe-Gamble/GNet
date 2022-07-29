@@ -44,7 +44,7 @@ int main()
 	if (Network::Initialize())
 	{
 		MyServer server;
-		if (server.Initialise(IPEndpoint(/*"192.168.0.203"*/ "::", 6112)))
+		if (server.Initialise(IPEndpoint(6112)))
 		{
 			while (true)
 			{

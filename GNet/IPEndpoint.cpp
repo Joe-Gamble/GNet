@@ -1,9 +1,28 @@
 #include "IPEndpoint.h"
 #include <assert.h>
+#include <windows.h>
 #include <iostream>
+#include <string>
 #include "Helpers.h"
 
+#include <vector>
+#include <locale>
+#include <sstream>
+#include "Socket.h"
+
 using namespace GNet;
+
+GNet::IPEndpoint::IPEndpoint(unsigned short port)
+{
+
+}
+
+void GNet::IPEndpoint::GetWebsite(std::string url, std::string& website_HTML, char* buffer)
+{
+
+}
+	
+
 
 GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 {
@@ -68,7 +87,7 @@ GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 	
 	//IPv6
 
-	in6_addr addr6; //location to store ipv4 address
+	in6_addr addr6; //location to store ipv6 address
 	result = inet_pton(AF_INET6, ip, &addr6);
 
 	if (result == 1) //ip was valid and was parsed successfully
