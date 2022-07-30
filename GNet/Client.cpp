@@ -17,7 +17,7 @@ namespace GNet
 
 			std::cout << "Socket successfully created." << std::endl;
 
-			//Attempt to connect to a socket listening on Port 4790
+			//Attempt to connect to a socket listening on Port 6112
 			if (socket.Connect(ip) == GResult::G_SUCCESS)
 			{
 				if (socket.SetBlocking(false) == GResult::G_SUCCESS)
@@ -34,6 +34,7 @@ namespace GNet
 			}
 			else
 			{
+				printf("Socket failed to connect to %s with port %hu.", ip.GetIPString(), ip.GetPort());
 			}
 			socket.Close();
 		}

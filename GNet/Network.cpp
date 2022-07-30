@@ -23,5 +23,6 @@ bool GNet::Network::Initialize()
 
 void GNet::Network::Shutdown()
 {
+	std::cout << "Network Shutdown" << std::endl;
 	WSACleanup();
 }

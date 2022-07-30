@@ -20,7 +20,7 @@ namespace GNet
 			return GResult::G_GENERICERROR;
 		}
 
-		m_handle = socket((m_ipversion == IPVersion::IPv4) ? AF_INET : AF_INET6, SOCK_STREAM, IPPROTO_TCP); //attempt to create a socket
+		m_handle = socket((m_ipversion == IPVersion::IPv4) ? PF_INET : PF_INET6, SOCK_STREAM, IPPROTO_TCP); //attempt to create a socket
 
 		if (m_handle == INVALID_SOCKET)
 		{
@@ -183,6 +183,7 @@ namespace GNet
 		if (result != 0)
 		{
 			int error = WSAGetLastError();
+			std::cout << error << std::endl;
 			return GResult::G_GENERICERROR;
 		}
 

@@ -4,8 +4,10 @@
 
 namespace GNet
 {
-	bool Server::Initialise(IPEndpoint ip)
+	bool Server::Initialise()
 	{
+		IPEndpoint ip = IPEndpoint();
+
 		master_fd.clear();
 		connections.clear();
 
@@ -16,7 +18,7 @@ namespace GNet
 
 			if (listeningSocket.Listen(ip) == GResult::G_SUCCESS)
 			{
-				std::cout << "Socket successfully listening." << std::endl;
+				printf("Socket successfully listening on port %d", ip.GetPort());
 
 				//Poll for active connection requests
 				WSAPOLLFD listeningSocketFD = {};

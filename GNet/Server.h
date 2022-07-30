@@ -8,10 +8,10 @@ namespace GNet
 	class Server
 	{
 	public:
-		bool Initialise(IPEndpoint ip);
+		bool Initialise();
 		void Frame();
-	protected:
 
+	protected:
 		virtual void OnConnect(TCPConnection& newConnection);
 		virtual void OnDisconnect(TCPConnection& lostConnection, std::string reason);
 		virtual bool ProcessPacket(std::shared_ptr<Packet> packet);

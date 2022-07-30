@@ -9,12 +9,10 @@ int main()
 	{
 		MyClient client;
 
-		/*
 		std::string connectionString;
 		std::cin >> connectionString;
-		*/
 
-		if (client.Connect(IPEndpoint( /*connectionString.c_str()*/ "::1", 6112)))
+		if (client.Connect(IPEndpoint(connectionString.c_str(), 6112)))
 		{
 			while (client.IsConnected())
 			{
@@ -24,6 +22,5 @@ int main()
 	}
 	
 	Network::Shutdown();
-	system("Pause");
 	return 0;
 }

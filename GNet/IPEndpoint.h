@@ -9,15 +9,13 @@ namespace GNet
 	class IPEndpoint
 	{
 	public:
-		IPEndpoint() {}
-		IPEndpoint(unsigned short port);
+		IPEndpoint(unsigned short port = 6112);
 		IPEndpoint(const char* ip, unsigned short port);
 		IPEndpoint(sockaddr* addr);
 
 		IPVersion GetIPVersion();
 		std::string GetHostname();
 		std::string GetIPString();
-		void GetWebsite(std::string url, std::string& websiteHTML, char* buffer);
 		std::vector<uint8_t> GetIPBytes();
 
 		unsigned short GetPort();
@@ -26,6 +24,8 @@ namespace GNet
 		void Print();
 
 	private:
+		bool GetWebsite(std::string url, std::string& websiteHTML, char* buffer);
+
 		IPVersion ipversion = IPVersion::Unknown;
 		std::string hostname = "";
 		std::string ip_string = "";
