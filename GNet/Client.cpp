@@ -2,6 +2,11 @@
 
 namespace GNet
 {
+	bool Client::Connect(const std::string& ip)
+	{
+		return Connect(IPEndpoint(ip.c_str()));
+	}
+
 	bool Client::Connect(IPEndpoint ip)
 	{
 		isConnected = false;

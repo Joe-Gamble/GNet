@@ -18,7 +18,7 @@ namespace GNet
 
 			if (listeningSocket.Listen(ip) == GResult::G_SUCCESS)
 			{
-				printf("Socket successfully listening on port %d", ip.GetPort());
+				printf("Socket successfully listening on port %d. \n", ip.GetPort());
 
 				//Poll for active connection requests
 				WSAPOLLFD listeningSocketFD = {};

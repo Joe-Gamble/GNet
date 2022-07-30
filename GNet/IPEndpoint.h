@@ -9,8 +9,11 @@ namespace GNet
 	class IPEndpoint
 	{
 	public:
+		//Server endpoint constructor
 		IPEndpoint(unsigned short port = 6112);
-		IPEndpoint(const char* ip, unsigned short port);
+
+		//Client endpoint constructor
+		IPEndpoint(const char* ip, unsigned short port = 6112);
 		IPEndpoint(sockaddr* addr);
 
 		IPVersion GetIPVersion();

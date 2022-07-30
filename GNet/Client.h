@@ -8,7 +8,8 @@ namespace GNet
 	class Client
 	{
 	public:
-		bool Connect(IPEndpoint ip);
+		bool Connect(const std::string& ip);
+		
 		bool IsConnected();
 		bool Frame();
 
@@ -23,6 +24,8 @@ namespace GNet
 		TCPConnection connection;
 
 	private:
+		bool Connect(IPEndpoint ip);
+
 		bool isConnected = false;
 		WSAPOLLFD master_fd;
 		WSAPOLLFD copy_fd;
