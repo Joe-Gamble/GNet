@@ -12,7 +12,7 @@ int main()
 		std::string connectionString;
 		std::cin >> connectionString;
 
-		if (client.Connect(IPEndpoint(connectionString.c_str(), 6112)))
+		if (client.Connect(connectionString))
 		{
 			while (client.IsConnected())
 			{

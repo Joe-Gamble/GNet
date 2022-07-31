@@ -7,7 +7,8 @@ namespace GNet
 	{
 		PT_INVALID,
 		PT_CHATMESSAGE,
-		PT_INTEGERARRAY 
+		PT_INTEGERARRAY,
+		PT_TRANSFORM
 	};
 
 	inline std::ostream& operator << (std::ostream& os, const PacketType& obj)

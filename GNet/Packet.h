@@ -30,8 +30,7 @@ namespace GNet
 
 		std::vector<char> buffer;
 
-	private:
-
+	protected:
 		uint32_t extractionOffset = 0; //used to "jump over" data that has already been extracted
 	};
 }

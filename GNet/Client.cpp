@@ -223,8 +223,7 @@ namespace GNet
 				std::shared_ptr<Packet> frontPacket = connection.pm_incoming.Retrieve();
 				if (!ProcessPacket(frontPacket))
 				{
-					CloseConnection("Failed to process incoming packet. ");
-					return false;
+					std::cerr << "Failed to process incoming packet. " << std::endl;
 				}
 				connection.pm_incoming.Pop();
 			}

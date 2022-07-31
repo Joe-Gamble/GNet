@@ -26,6 +26,10 @@ bool MyClient::ProcessPacket(std::shared_ptr<Packet> packet)
 		}
 		break;
 
+	case PacketType::PT_TRANSFORM:
+		std::cout << "Recieved Transform" << std::endl;
+		break;
+
 	default:
 		return false;
 
