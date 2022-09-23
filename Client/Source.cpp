@@ -9,10 +9,9 @@ int main()
 	{
 		MyClient client;
 
-		std::string connectionString;
-		std::cin >> connectionString;
+		const std::string string = "192.168.0.23";
 
-		if (client.Connect(connectionString))
+		if (client.Connect(string))
 		{
 			while (client.IsConnected())
 			{
