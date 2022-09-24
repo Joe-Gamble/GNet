@@ -11,7 +11,7 @@ namespace GNet
 	{
 		isConnected = false;
 
-		Socket socket = Socket(ip.GetIPVersion());
+		TCPSocket socket = TCPSocket(ip.GetIPVersion());
 		//Create the socket
 		if (socket.Create() == GResult::G_SUCCESS)
 		{

@@ -159,6 +159,7 @@
     <ClInclude Include="SocketHandler.h" />
     <ClInclude Include="SocketOption.h" />
     <ClInclude Include="TCPConnection.h" />
+    <ClInclude Include="TCPSocket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="TCPConnection.cpp" />
+    <ClCompile Include="TCPSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PacketException.h" />

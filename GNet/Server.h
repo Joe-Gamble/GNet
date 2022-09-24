@@ -18,7 +18,7 @@ namespace GNet
 
 		void CloseConnection(int connectionIndex, std::string reason);
 
-		Socket listeningSocket;
+		TCPSocket listeningSocket;
 
 		//List of active connections 
 		std::vector<TCPConnection> connections;

@@ -5,6 +5,7 @@ namespace GNet
 	enum class SocketOption
 	{
 		TCP_NO_DELAY,
-		IPv6ONLY
+		IPv6ONLY,
+		UDP
 	};
 }

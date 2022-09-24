@@ -15,13 +15,8 @@ namespace GNet
 		Socket(IPVersion ipversion = IPVersion::IPv4, 
 			SocketHandle handle = INVALID_SOCKET);
 
-		GResult Create();
-		GResult Close();
-
-		GResult Bind(IPEndpoint endpoint);
-		GResult Listen(IPEndpoint endpoint, int backlog = 5);
-		GResult Accept(Socket& outSocket, IPEndpoint* endpoint = nullptr);
-		GResult Connect(IPEndpoint endpoint);
+		virtual GResult Create() = 0;
+		virtual GResult Close() = 0;
 
 		GResult Send(const void* data, int numberOfBytes, int& bytesSent);
 		GResult Recv(void* destination, int numberOfBytes, int& bytesReceived);
@@ -33,11 +28,10 @@ namespace GNet
 
 		SocketHandle GetHandle();
 		IPVersion GetIPVersion();
-		GResult SetBlocking(bool isBlocking);
 
-	private:
-		IPVersion m_ipversion = IPVersion::IPv4;
-		SocketHandle m_handle = INVALID_SOCKET;
+	protected:
+		IPVersion ip_version = IPVersion::IPv4;
+		SocketHandle handle = INVALID_SOCKET;
 		GResult SetSocketOption(SocketOption option, BOOL Value);
 	};
 }

@@ -11,7 +11,7 @@ namespace GNet
 		master_fd.clear();
 		connections.clear();
 
-		listeningSocket = Socket(ip.GetIPVersion());
+		listeningSocket = TCPSocket(ip.GetIPVersion());
 		if (listeningSocket.Create() == GResult::G_SUCCESS)
 		{
 			std::cout << "Socket successfully created." << std::endl;
@@ -63,7 +63,7 @@ namespace GNet
 			WSAPOLLFD& listeningSocketFD = copy_fd[0];
 			if (listeningSocketFD.revents & POLLRDNORM)
 			{
-				Socket newConnectionSocket;
+				TCPSocket newConnectionSocket;
 				IPEndpoint newConnectionEndpoint;
 
 				if (listeningSocket.Accept(newConnectionSocket, &newConnectionEndpoint) == GResult::G_SUCCESS)

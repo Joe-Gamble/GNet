@@ -2,7 +2,7 @@
 
 using namespace GNet;
 
-TCPConnection::TCPConnection(Socket socket, IPEndpoint endpoint)
+TCPConnection::TCPConnection(TCPSocket socket, IPEndpoint endpoint)
 	:socket(socket), endpoint(endpoint)
 {
 	stringRepresentation = "[" + endpoint.GetIPString() + " - " + std::to_string(endpoint.GetPort()) + "]";

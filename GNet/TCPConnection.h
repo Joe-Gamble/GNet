@@ -1,5 +1,5 @@
 #pragma once
-#include "Socket.h"
+#include "TCPSocket.h"
 #include "PacketManager.h"
 
 namespace GNet
@@ -8,12 +8,12 @@ namespace GNet
 	class TCPConnection
 	{
 	public:
-		TCPConnection(Socket socket, IPEndpoint endpoint);
-		TCPConnection() :socket(Socket()) {}
+		TCPConnection(TCPSocket socket, IPEndpoint endpoint);
+		TCPConnection() :socket(TCPSocket()) {}
 
 		void Close();
 		std::string ToString();
-		Socket socket;
+		TCPSocket socket;
 		char buffer[GNet::g_MaxPacketSize];
 
 		PacketManager pm_incoming;
