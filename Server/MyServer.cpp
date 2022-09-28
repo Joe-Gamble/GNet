@@ -11,6 +11,7 @@ void MyServer::OnConnect(TCPConnection& newConnection)
 	std::shared_ptr<Packet> newUserMessagePacket = std::make_unique<Packet>(PacketType::PT_CHATMESSAGE);
 	*newUserMessagePacket << std::string("A user has connected!");
 
+	/*
 	for (auto& connection : connections)
 	{
 		if (&connection == &newConnection)
@@ -18,6 +19,7 @@ void MyServer::OnConnect(TCPConnection& newConnection)
 
 		connection.pm_outgoing.Append(newUserMessagePacket);
 	}
+	*/
 }
 
 void MyServer::OnDisconnect(TCPConnection& lostConnection, std::string reason)
@@ -27,6 +29,7 @@ void MyServer::OnDisconnect(TCPConnection& lostConnection, std::string reason)
 	std::shared_ptr<Packet> connectionLostPacket = std::make_unique<Packet>(PacketType::PT_CHATMESSAGE);
 	*connectionLostPacket << std::string("A user has disconnected!");
 
+	/*
 	for (auto& connection : connections)
 	{
 		if (&connection == &lostConnection)
@@ -34,6 +37,7 @@ void MyServer::OnDisconnect(TCPConnection& lostConnection, std::string reason)
 
 		connection.pm_outgoing.Append(connectionLostPacket);
 	}
+	*/
 }
 
 bool MyServer::ProcessPacket(std::shared_ptr<Packet> packet)

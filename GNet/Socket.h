@@ -18,6 +18,8 @@ namespace GNet
 		virtual GResult Create() = 0;
 		virtual GResult Close() = 0;
 
+		GResult Bind(IPEndpoint endpoint);
+
 		GResult Send(const void* data, int numberOfBytes, int& bytesSent);
 		GResult Recv(void* destination, int numberOfBytes, int& bytesReceived);
 		GResult SendAll(const void* data, int numberOfBytes);
@@ -29,9 +31,12 @@ namespace GNet
 		SocketHandle GetHandle();
 		IPVersion GetIPVersion();
 
+		GResult SetBlocking(bool isBlocking);
+
 	protected:
 		IPVersion ip_version = IPVersion::IPv4;
+
 		SocketHandle handle = INVALID_SOCKET;
-		GResult SetSocketOption(SocketOption option, BOOL Value);
+		GResult SetSocketOption(SocketOption option, IPVersion version);
 	};
 }

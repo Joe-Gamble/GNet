@@ -26,12 +26,7 @@ namespace GNet
 			return GResult::G_GENERICERROR;
 		}
 
-		if (SetBlocking(false) != GResult::G_SUCCESS)
-		{
-			return GResult::G_SUCCESS;
-		}
-
-		if (SetSocketOption(SocketOption::TCP_NO_DELAY, TRUE) != GResult::G_SUCCESS)
+		if (SetSocketOption(SocketOption::TCP_NO_DELAY, ip_version) != GResult::G_SUCCESS)
 		{
 			return GResult::G_GENERICERROR;
 		}
@@ -58,45 +53,8 @@ namespace GNet
 		return GResult::G_SUCCESS;
 	}
 
-	GResult TCPSocket::Bind(IPEndpoint endpoint)
-	{
-		assert(ip_version == endpoint.GetIPVersion());
-
-		if (ip_version == IPVersion::IPv4)
-		{
-			sockaddr_in addr = endpoint.GetSockaddrIPv4();
-			int result = bind(handle, (sockaddr*)(&addr), sizeof(sockaddr_in));
-			if (result != 0)
-			{
-				int error = WSAGetLastError();
-				return GResult::G_GENERICERROR;
-			}
-
-		}
-		else
-		{
-			sockaddr_in6 addr6 = endpoint.GetSockaddrIPv6();
-			int result = bind(handle, (sockaddr*)(&addr6), sizeof(sockaddr_in6));
-			if (result != 0)
-			{
-				int error = WSAGetLastError();
-				return GResult::G_GENERICERROR;
-			}
-		}
-		return GResult::G_SUCCESS;
-	}
-
 	GResult TCPSocket::Listen(IPEndpoint endpoint, int backlog)
 	{
-		if (ip_version == IPVersion::IPv6)
-		{
-			if (SetSocketOption(SocketOption::IPv6ONLY, FALSE) != GResult::G_SUCCESS)
-			{
-				return GResult::G_GENERICERROR;
-			}
-		}
-
-
 		if (Bind(endpoint) != GResult::G_SUCCESS)
 		{
 			return GResult::G_GENERICERROR;
@@ -180,26 +138,9 @@ namespace GNet
 
 		if (result != 0)
 		{
-			int error = WSAGetLastError();
-			std::cout << error << std::endl;
 			return GResult::G_GENERICERROR;
 		}
 
-		return GResult::G_SUCCESS;
-	}
-
-	GResult TCPSocket::SetBlocking(bool isBlocking)
-	{
-		unsigned long nonBlocking = 1;
-		unsigned long blocking = 0;
-
-		int result = ioctlsocket(handle, FIONBIO, isBlocking ? &blocking : &nonBlocking);
-
-		if (result == SOCKET_ERROR)
-		{
-			int error = WSAGetLastError();
-			return GResult::G_GENERICERROR;
-		}
 		return GResult::G_SUCCESS;
 	}
 }

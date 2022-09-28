@@ -10,6 +10,34 @@ namespace GNet
 		assert(ipversion == IPVersion::IPv4 || ipversion == IPVersion::IPv6);
 	}
 
+	GResult Socket::Bind(IPEndpoint endpoint)
+	{
+		assert(ip_version == endpoint.GetIPVersion());
+
+		if (ip_version == IPVersion::IPv4)
+		{
+			sockaddr_in addr = endpoint.GetSockaddrIPv4();
+			int result = bind(handle, (sockaddr*)(&addr), sizeof(sockaddr_in));
+			if (result != 0)
+			{
+				int error = WSAGetLastError();
+				return GResult::G_GENERICERROR;
+			}
+
+		}
+		else
+		{
+			sockaddr_in6 addr6 = endpoint.GetSockaddrIPv6();
+			int result = bind(handle, (sockaddr*)(&addr6), sizeof(sockaddr_in6));
+			if (result != 0)
+			{
+				int error = WSAGetLastError();
+				return GResult::G_GENERICERROR;
+			}
+		}
+		return GResult::G_SUCCESS;
+	}
+
 	GResult Socket::Send(const void* data, int numberOfBytes, int& bytesSent)
 	{
 		bytesSent = send(handle, (const char*)(data), numberOfBytes, NULL);
@@ -132,23 +160,31 @@ namespace GNet
 		return ip_version;
 	}
 
-	GResult GNet::Socket::SetSocketOption(SocketOption option, BOOL value)
+	GResult GNet::Socket::SetSocketOption(SocketOption option, IPVersion version)
 	{
 		int result = 0;
+		int yes = 1;
+
 		switch (option)
 		{
-		case SocketOption::TCP_NO_DELAY:
+			case SocketOption::TCP_NO_DELAY:
 			{
-			result = setsockopt(handle, IPPROTO_TCP, TCP_NODELAY, (const char*)&value, sizeof(value));
+				result = setsockopt(handle, IPPROTO_TCP, TCP_NODELAY, (const char*)&yes, sizeof(yes));
 				break;
 			}
-		case SocketOption::IPv6ONLY:
-		{
-			result = setsockopt(handle, IPPROTO_IPV6, IPV6_V6ONLY, (const char*)&value, sizeof(value));
-			break;
-		}
 		default:
 			return GResult::G_GENERICERROR;
+		}
+
+		if (result != 0)
+		{
+			int error = WSAGetLastError();
+			return GResult::G_GENERICERROR;
+		}
+
+		if (ip_version == IPVersion::IPv6)
+		{
+			result = setsockopt(handle, IPPROTO_IPV6, IPV6_V6ONLY, (const char*)&yes, sizeof(yes));
 		}
 
 		if (result != 0)
@@ -159,5 +195,16 @@ namespace GNet
 		return GResult::G_SUCCESS;
 	}
 
-	
+	GResult Socket::SetBlocking(bool isBlocking)
+	{
+		unsigned long nonBlocking = 1;
+		unsigned long blocking = 0;
+
+		if (ioctlsocket(handle, FIONBIO, isBlocking ? &blocking : &nonBlocking) == SOCKET_ERROR)
+		{
+			int error = WSAGetLastError();
+			return GResult::G_GENERICERROR;
+		}
+		return GResult::G_SUCCESS;
+	}
 }

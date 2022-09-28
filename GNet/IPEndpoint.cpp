@@ -59,10 +59,12 @@ GNet::IPEndpoint::IPEndpoint(unsigned short port)
 		delete[] buffer;
 	*/
 
+	// Note: Website code not currently required for direct connection and not needed for binding: 
+	// You can only bind to addresses local to your machine
 	* this = IPEndpoint::IPEndpoint("0.0.0.0", port);
 }
 
-bool GNet::IPEndpoint::GetWebsite(std::string url, std::string& website_HTML, char* buffer)
+bool GNet::IPEndpoint::GetPublicIPFromDomain(std::string url, std::string& website_HTML, char* buffer)
 {
 	SOCKET Socket;
 
@@ -133,7 +135,6 @@ bool GNet::IPEndpoint::GetWebsite(std::string url, std::string& website_HTML, ch
 }
 	
 
-
 GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 {
 	this->port = port;
@@ -142,7 +143,7 @@ GNet::IPEndpoint::IPEndpoint(const char* ip, unsigned short port)
 	//IPv4
 
 	in_addr addr; //location to store ipv4 address
-	int result = inet_pton(PF_INET, ip, &addr);
+	int result = inet_pton(AF_INET, ip, &addr);
 
 	if (result == 1) //ip was valid and was parsed successfully
 	{

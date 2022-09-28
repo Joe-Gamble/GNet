@@ -27,7 +27,7 @@ namespace GNet
 		void Print();
 
 	private:
-		bool GetWebsite(std::string url, std::string& websiteHTML, char* buffer);
+		bool GetPublicIPFromDomain(std::string url, std::string& websiteHTML, char* buffer);
 
 		IPVersion ipversion = IPVersion::Unknown;
 		std::string hostname = "";

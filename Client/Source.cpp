@@ -9,7 +9,7 @@ int main()
 	{
 		MyClient client;
 
-		const std::string string = "192.168.0.23";
+		const std::string string = "192.168.0.22";
 
 		if (client.Connect(string))
 		{

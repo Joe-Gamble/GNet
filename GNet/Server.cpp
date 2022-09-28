@@ -4,6 +4,8 @@
 
 namespace GNet
 {
+#pragma region TCP Server
+
 	bool Server::Initialise()
 	{
 		IPEndpoint ip = IPEndpoint();
@@ -287,6 +289,76 @@ namespace GNet
 		std::cout << "Packet Received with size: " << packet->buffer.size() << std::endl;
 		return true;
 	}
+
+#pragma endregion
+
+#pragma region UDP Server
+	bool UDPServer::Initialise()
+	{
+		IPEndpoint ip = IPEndpoint();
+
+		master_fd.clear();
+
+		socket = std::make_unique<UDPSocket>(ip.GetIPVersion());
+
+		if (socket->Create() == GResult::G_SUCCESS)
+		{
+			std::cout << "[SERVER] UDP Socket successfully created." << std::endl;
+
+			if (socket->Bind(ip) == GResult::G_SUCCESS)
+			{
+				std::cout << "[SERVER] UDP Socket successfully bound." << std::endl;
+
+				if (socket->SetBlocking(false) == GResult::G_SUCCESS)
+				{
+					return true;
+				}
+			}
+		}
+		else
+		{
+			std::cerr << "[SERVER] UDP Socket failed to create." << std::endl;
+		}
+
+		return false;
+	}
+
+	void UDPServer::Frame()
+	{
+	
+	}
+
+	void UDPServer::OnConnect(UDPConnection& newConnection)
+	{
+		std::cout << newConnection.ToString() << " - New Connection Accepted." << std::endl;
+	}
+
+	void UDPServer::OnDisconnect(UDPConnection& lostConnection, std::string reason)
+	{
+		std::cout << "[" << reason << "] Connection lost: " << lostConnection.ToString() << "." << std::endl;
+	}
+
+	void UDPServer::CloseConnection(int connectionIndex, std::string reason)
+	{
+		/*
+		UDPConnection& connection = connections[connectionIndex];
+		OnDisconnect(connection, reason);
+
+		master_fd.erase(master_fd.begin() + (connectionIndex + 1));
+		copy_fd.erase(copy_fd.begin() + (connectionIndex + 1));
+
+		connection.Close();
+		connections.erase(connections.begin() + connectionIndex);
+		*/
+	}
+
+	bool UDPServer::ProcessPacket(std::shared_ptr<Packet> packet)
+	{
+		std::cout << "Packet Received with size: " << packet->buffer.size() << std::endl;
+		return true;
+	}
+#pragma endregion
+
 }
 
 

@@ -18,6 +18,8 @@ bool GNet::Network::Initialize()
 		std::cerr << "Could not find a useable version of the winsock API dll." << std::endl;
 		return false;
 	}
+
+	std::cout << "GNet Initialized. \n" << std::endl;
 	return true;
 }
 
