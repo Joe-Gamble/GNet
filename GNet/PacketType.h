@@ -6,9 +6,10 @@ namespace GNet
 	enum class PacketType : uint16_t //2 bytes per classification
 	{
 		PT_INVALID,
-		PT_CHATMESSAGE,
-		PT_INTEGERARRAY,
-		PT_TRANSFORM
+		PT_VERIFY,
+		PT_SCENE_LOAD,
+		PT_ENTITY_INSTANTIATE,
+		PT_ENTITY_CHANGE,
 	};
 
 	inline std::ostream& operator << (std::ostream& os, const PacketType& obj)

@@ -150,12 +150,12 @@ namespace GNet
 		return GResult::G_SUCCESS;
 	}
 
-	SocketHandle GNet::Socket::GetHandle()
+	SocketHandle& GNet::Socket::GetHandle()
 	{
 		return handle;
 	}
 
-	IPVersion GNet::Socket::GetIPVersion()
+	IPVersion& GNet::Socket::GetIPVersion()
 	{
 		return ip_version;
 	}

@@ -7,29 +7,6 @@ bool MyClient::ProcessPacket(std::shared_ptr<Packet> packet)
 
 	switch (packet->GetPacketType())
 	{
-	case PacketType::PT_CHATMESSAGE:
-
-		*packet >> chatmessage;
-		std::cout << "Chat Message: " << chatmessage << std::endl;
-		break;
-
-	case PacketType::PT_INTEGERARRAY:
-
-		*packet >> arraysize;
-		std::cout << "Arraysize: " << arraysize << std::endl;
-
-		for (uint32_t i = 0; i < arraysize; i++)
-		{
-			uint32_t digit;
-			*packet >> digit;
-			std::cout << "Value [" << i << "] : " << digit << std::endl;
-		}
-		break;
-
-	case PacketType::PT_TRANSFORM:
-		std::cout << "Recieved Transform" << std::endl;
-		break;
-
 	default:
 		return false;
 

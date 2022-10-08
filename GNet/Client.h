@@ -7,6 +7,8 @@ namespace GNet
 	class Client
 	{
 	public:
+		~Client();
+
 		bool Connect(const std::string& ip);
 		
 		bool IsConnected();

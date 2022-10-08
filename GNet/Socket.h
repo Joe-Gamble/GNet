@@ -28,8 +28,8 @@ namespace GNet
 		GResult Send(Packet& packet);
 		GResult Recv(Packet& packet);
 
-		SocketHandle GetHandle();
-		IPVersion GetIPVersion();
+		SocketHandle& GetHandle();
+		IPVersion& GetIPVersion();
 
 		GResult SetBlocking(bool isBlocking);
 

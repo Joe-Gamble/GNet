@@ -248,7 +248,7 @@ namespace GNet
 					while (connections[i].pm_incoming.HasPendingPackets())
 					{
 						std::shared_ptr<Packet> frontPacket = connections[i].pm_incoming.Retrieve();
-						if (!ProcessPacket(frontPacket))
+						if (!ProcessPacket(frontPacket, i))
 						{
 							CloseConnection(i, "Failed to process incoming packet. ");
 							break;
@@ -279,12 +279,16 @@ namespace GNet
 		copy_fd.erase(copy_fd.begin() + (connectionIndex + 1));
 
 		connection.Close();
-		connections.erase(connections.begin() + connectionIndex);
+
+		if (connections.size() <= 1)
+			connections.clear();
+		else
+			connections.erase(connections.begin() + connectionIndex);
 	}
 
 
 
-	bool Server::ProcessPacket(std::shared_ptr<Packet> packet)
+	bool Server::ProcessPacket(std::shared_ptr<Packet> packet, int connectionIndex)
 	{
 		std::cout << "Packet Received with size: " << packet->buffer.size() << std::endl;
 		return true;

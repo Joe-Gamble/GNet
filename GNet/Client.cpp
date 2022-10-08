@@ -3,6 +3,14 @@
 namespace GNet
 {
 #pragma region TCP Client
+	Client::~Client()
+	{
+		if (IsConnected())
+		{
+			CloseConnection("Client Destroyed");
+		}
+	}
+
 	bool Client::Connect(const std::string& ip)
 	{
 		return Connect(IPEndpoint(ip.c_str()));
@@ -22,6 +30,7 @@ namespace GNet
 				return false;
 
 			std::cout << "Socket successfully created." << std::endl;
+			std::cout << "Attempting to connect to " << ip.GetIPString() << std::endl;
 
 			//Attempt to connect to a socket listening on Port 6112
 			if (socket.Connect(ip) == GResult::G_SUCCESS)
@@ -40,7 +49,7 @@ namespace GNet
 			}
 			else
 			{
-				std::cout << "Failed to connect to Address [ %s ] with Port [ %hu ]. \n" << std::endl, ip.GetIPString(), ip.GetPort();
+				std::cout << "Failed to connect to Address [ " << ip.GetIPString() << " ] with Port [ " << ip.GetPort() << " ]. \n" << std::endl;
 			}
 			socket.Close();
 		}
@@ -249,7 +258,7 @@ namespace GNet
 
 	void Client::OnDisconnect(std::string reason)
 	{
-		std::cout << "Loct connection. Reason: " << reason << "." << std::endl;
+		std::cout << "Lost connection. Reason: " << reason << "." << std::endl;
 	}
 	void Client::CloseConnection(std::string reason)
 	{
