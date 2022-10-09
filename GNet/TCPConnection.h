@@ -12,13 +12,16 @@ namespace GNet
 		TCPConnection() :socket(TCPSocket()) {}
 
 		void Close();
+		inline bool IsActive() { return active;  }
+		inline void SetActive(bool isactive) { active = isactive; }
 		std::string ToString();
 		TCPSocket socket;
-		char buffer[GNet::g_MaxPacketSize];
+		char buffer[GNet::g_MaxPacketSize] = {};
 
 		PacketManager pm_incoming;
 		PacketManager pm_outgoing;
 	private:
+		bool active = true;
 		IPEndpoint endpoint;
 		std::string stringRepresentation = "";
 	};

@@ -36,7 +36,7 @@ namespace GNet
 
 	GResult TCPSocket::Close()
 	{
-		if (handle != INVALID_SOCKET)
+		if (handle == INVALID_SOCKET)
 		{
 			return GResult::G_GENERICERROR;
 		}

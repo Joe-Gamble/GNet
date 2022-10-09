@@ -5,10 +5,6 @@ namespace GNet
 #pragma region TCP Client
 	Client::~Client()
 	{
-		if (IsConnected())
-		{
-			CloseConnection("Client Destroyed");
-		}
 	}
 
 	bool Client::Connect(const std::string& ip)
@@ -211,6 +207,7 @@ namespace GNet
 						{
 							pm.currentPacketExtrtactionOffset = 0;
 							pm.currentTask = PacketManagerTask::ProcessPacketSize;
+
 
 							pm.Pop(); //remove packet from queue after it's completely sent
 						}

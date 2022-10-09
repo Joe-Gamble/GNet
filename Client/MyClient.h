@@ -1,6 +1,8 @@
 #pragma once
 #include <GNet/IncludeMe.h>
 
+using namespace GNet;
+
 class MyClient : public Client
 {
 protected:

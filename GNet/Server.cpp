@@ -6,6 +6,11 @@ namespace GNet
 {
 #pragma region TCP Server
 
+	Server::~Server()
+	{
+		listeningSocket.Close();
+	}
+
 	bool Server::Initialise()
 	{
 		IPEndpoint ip = IPEndpoint();
@@ -80,7 +85,7 @@ namespace GNet
 					newConnectionFD.revents = 0;
 
 					master_fd.push_back(newConnectionFD);
-					
+
 					OnConnect(acceptedConnection);
 				}
 				else
@@ -101,7 +106,7 @@ namespace GNet
 					continue;
 				}
 
-				if (copy_fd[i].revents & POLLHUP) //if poll hangup occured on this socket
+				if (copy_fd[i].revents & POLLHUP && connection.IsActive()) //if poll hangup occured on this socket
 				{
 					CloseConnection(connectionIndex, "Poll Hangup");
 					continue;
@@ -265,7 +270,7 @@ namespace GNet
 		std::cout << newConnection.ToString() << " - New Connection Accepted." << std::endl;
 	}
 
-	void Server::OnDisconnect(TCPConnection& lostConnection, std::string reason)
+	void Server::OnDisconnect(TCPConnection& lostConnection, const std::string& reason)
 	{
 		std::cout << "[" << reason << "] Connection lost: " << lostConnection.ToString() << "." << std::endl;
 	}
@@ -286,7 +291,27 @@ namespace GNet
 			connections.erase(connections.begin() + connectionIndex);
 	}
 
+	void Server::CloseConnection(TCPConnection* connectionToClose, const std::string& reason)
+	{
+		for (int i = connections.size() - 1; i >= 0; i--)
+		{
+			if (&connections[i] == connectionToClose)
+			{
+				OnDisconnect(*connectionToClose, reason);
 
+				master_fd.erase(master_fd.begin() + (i + 1));
+				copy_fd.erase(copy_fd.begin() + (i + 1));
+
+				connectionToClose->Close();
+
+				if (connections.size() <= 1)
+					connections.clear();
+				else
+					connections.erase(connections.begin() + i);
+				break;
+			}
+		}
+	}
 
 	bool Server::ProcessPacket(std::shared_ptr<Packet> packet, int connectionIndex)
 	{

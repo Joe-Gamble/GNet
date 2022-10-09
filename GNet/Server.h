@@ -3,22 +3,23 @@
 #include "UDPConnection.h"
 #include "ServerClientData.h"
 
-using namespace GNet;
-
 namespace GNet
 {
 	class Server
 	{
 	public:
+		~Server();
+
 		bool Initialise();
 		void Frame();
 
 	protected:
 		virtual void OnConnect(TCPConnection& newConnection);
-		virtual void OnDisconnect(TCPConnection& lostConnection, std::string reason);
+		virtual void OnDisconnect(TCPConnection& lostConnection, const std::string& reason);
 		virtual bool ProcessPacket(std::shared_ptr<Packet> packet, int connectionIndex);
 
 		void CloseConnection(int connectionIndex, std::string reason);
+		void CloseConnection(TCPConnection* connectionToClose, const std::string& reason);
 
 		TCPSocket listeningSocket;
 
