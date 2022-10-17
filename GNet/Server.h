@@ -19,7 +19,7 @@ namespace GNet
 		virtual bool ProcessPacket(std::shared_ptr<Packet> packet, int connectionIndex);
 
 		void CloseConnection(int connectionIndex, std::string reason);
-		void CloseConnection(TCPConnection* connectionToClose, const std::string& reason);
+		void CloseConnection(TCPConnection& connectionToClose, const std::string& reason);
 
 		TCPSocket listeningSocket;
 

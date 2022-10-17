@@ -291,18 +291,18 @@ namespace GNet
 			connections.erase(connections.begin() + connectionIndex);
 	}
 
-	void Server::CloseConnection(TCPConnection* connectionToClose, const std::string& reason)
+	void Server::CloseConnection(TCPConnection& connectionToClose, const std::string& reason)
 	{
 		for (int i = connections.size() - 1; i >= 0; i--)
 		{
-			if (&connections[i] == connectionToClose)
+			if (&connections[i] == &connectionToClose)
 			{
-				OnDisconnect(*connectionToClose, reason);
+				OnDisconnect(connectionToClose, reason);
 
 				master_fd.erase(master_fd.begin() + (i + 1));
 				copy_fd.erase(copy_fd.begin() + (i + 1));
 
-				connectionToClose->Close();
+				connectionToClose.Close();
 
 				if (connections.size() <= 1)
 					connections.clear();
